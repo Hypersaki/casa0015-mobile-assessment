@@ -1,26 +1,13 @@
 import 'package:flutter/material.dart';
 
-// class connection extends StatefulWidget {
-//   const connection({super.key});
-//
-//   @override
-//   State<connection> createState() => _connectionstate();
-// }
-//
-// class _connectionstate extends State<connection> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }
 import 'package:flutter_blue/flutter_blue.dart'; // Make sure to add flutter_blue to your pubspec.yaml
 
-class connection extends StatefulWidget {
+class Connection extends StatefulWidget {
   @override
-  _connectionstate createState() => _connectionstate();
+  _ConnectionState createState() => _ConnectionState();
 }
 
-class _connectionstate extends State<connection> {
+class _ConnectionState extends State<Connection> {
   FlutterBlue flutterBlue = FlutterBlue.instance;
   bool isScanning = false;
   List<BluetoothDevice> devicesList = [];
@@ -43,7 +30,6 @@ class _connectionstate extends State<connection> {
 
     flutterBlue.startScan(timeout: Duration(seconds: 4));
 
-    // Listen to scan results
     var subscription = flutterBlue.scanResults.listen((List<ScanResult> results) {
       // do something with scan results
       for (ScanResult result in results) {

@@ -10,6 +10,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: "Air Ring",home: const navigationbar());
+    return MaterialApp(title: "Air Ring",home: const BtmNavigationBar());
   }
 }

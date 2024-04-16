@@ -1,12 +1,12 @@
 
 import 'package:flutter/material.dart';
 
-class overallscore extends StatefulWidget {
+class OverallScore extends StatefulWidget {
   @override
-  _overallscoreState createState() => _overallscoreState();
+  _OverallScoreState createState() => _OverallScoreState();
 }
 
-class _overallscoreState extends State<overallscore> {
+class _OverallScoreState extends State<OverallScore> {
   // Assuming score is a dynamic value that can be updated
   int score = 73; // Initialize with a default value or fetch from a model
 

@@ -16,12 +16,12 @@
 // }
 import 'package:flutter/material.dart';
 
-class notification extends StatefulWidget {
+class Notifications extends StatefulWidget {
   @override
-  _notificationstate createState() => _notificationstate();
+  _NotificationsState createState() => _NotificationsState();
 }
 
-class _notificationstate extends State<notification> {
+class _NotificationsState extends State<Notifications> {
   bool singlePoorIndicator = true;
   bool overallScoreLow = true;
   bool overallScoreStarred = false;

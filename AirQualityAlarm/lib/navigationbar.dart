@@ -5,35 +5,35 @@ import 'package:airqualityalarm/dataviewer.dart';
 import 'package:airqualityalarm/notification.dart';
 import 'package:airqualityalarm/connection.dart';
 
-class navigationbar extends StatefulWidget {
-  const navigationbar({super.key});
+class BtmNavigationBar extends StatefulWidget {
+  const BtmNavigationBar({super.key});
 
   @override
-  State<navigationbar> createState() => _navigationbarState();
+  State<BtmNavigationBar> createState() => _BtmNavigationBarState();
 }
 
-class _navigationbarState extends State<navigationbar> {
+class _BtmNavigationBarState extends State<BtmNavigationBar> {
   int _currentIndex=0;
   List _pageList=[
-    overallscore(),
-    dataviewer(),
-    notification(),
-    connection()
+    OverallScore(),
+    DataViewer(),
+    Notifications(),
+    Connection()
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: this._pageList[this._currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: this._currentIndex,//配置默认选中的菜单，从下标零开始
+        currentIndex: this._currentIndex,
         onTap: (int index){
-          setState(() { //改变状态
+          setState(() {
             this._currentIndex=index;
           });
         },
-        iconSize: 50,//icon大小
-        fixedColor: Colors.red,//选中时颜色
-        type: BottomNavigationBarType.fixed,//三个以上一定要设置type属性保证正常显示
+        iconSize: 50,
+        fixedColor: Colors.red,//color showing when selected
+        type: BottomNavigationBarType.fixed,//over 3, set type
         items: [
           BottomNavigationBarItem(
             label: 'Overall Score',
@@ -41,14 +41,14 @@ class _navigationbarState extends State<navigationbar> {
             tooltip: 'Overall Score',  //长按显示的文本
           ),
           BottomNavigationBarItem(
-            label: 'dataviewer',
+            label: 'Data Viewer',
             icon: Icon(Icons.data_thresholding_outlined),
-            tooltip: 'dataviewer',
+            tooltip: 'Data Viewer',
           ),
           BottomNavigationBarItem(
-            label: 'notification',
+            label: 'Notification',
             icon: Icon(Icons.notifications_active),
-            tooltip: 'notification',
+            tooltip: 'Notification',
           ),
           BottomNavigationBarItem(
             label: 'connection',

@@ -1,31 +1,18 @@
-// import 'package:flutter/material.dart';
-//
-// class dataviewer extends StatefulWidget {
-//   const dataviewer({super.key});
-//
-//   @override
-//   State<dataviewer> createState() => _dataviewerState();
-// }
-//
-// class _dataviewerState extends State<dataviewer> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }
 import 'package:flutter/material.dart';
+// Make sure to import the humidity correctly
+import 'data_hr.dart'; // Replace with the correct import path for your HumidityDataScreen
 
-class dataviewer extends StatefulWidget {
+class DataViewer extends StatefulWidget {
   @override
-  _dataviewerstate createState() => _dataviewerstate();
+  _DataViewerState createState() => _DataViewerState();
 }
 
-class _dataviewerstate extends State<dataviewer> {
-  // Assuming these values are dynamic and can be updated
-  double humidity = 12.5; // Initialize with a default value or fetch from a model
-  int co2 = 400; // in ppm
+class _DataViewerState extends State<DataViewer> {
+  // These values are assumed to be dynamic and updated accordingly
+  double humidity = 0; // Initialize with a default value or fetch from a model
+  int co2 = 400; // in parts per million (ppm)
   int co = 6; // in ppm
-  double temperature = 22.0; // in Celsius
+  double temperature = 0; // in Celsius
 
   @override
   Widget build(BuildContext context) {
@@ -36,20 +23,30 @@ class _dataviewerstate extends State<dataviewer> {
         ),
         body: ListView(
           children: <Widget>[
-            _buildSensorTile('Humidity', '$humidity%'),
-            _buildSensorTile('CO2', '$co2 ppm'),
-            _buildSensorTile('CO', '$co ppm'),
-            _buildSensorTile('Temperature', '$temperature °C'),
+            _buildSensorTile('Humidity', '$humidity%', () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => HumidityDataScreen()),
+              );
+            }),
+            _buildSensorTile('CO2', '$co2 ppm', () {
+              // Add navigation logic to CO2 detail page
+            }),
+            _buildSensorTile('CO', '$co ppm', () {
+              // Add navigation logic to CO detail page
+            }),
+            _buildSensorTile('Temperature', '$temperature °C', () {
+              // Add navigation logic to Temperature detail page
+            }),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSensorTile(String title, String value) {
+  Widget _buildSensorTile(String title, String value, VoidCallback onTap) {
     return ListTile(
       leading: Icon(
-        Icons.square, // Replace with actual leading icon
+        Icons.square, // Replace with the actual icon
         color: Colors.grey,
         size: 30,
       ),
@@ -61,6 +58,7 @@ class _dataviewerstate extends State<dataviewer> {
           fontWeight: FontWeight.bold,
         ),
       ),
+      onTap: onTap,
     );
   }
 }
