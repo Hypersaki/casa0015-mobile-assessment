@@ -38,7 +38,7 @@ class _BtmNavigationBarState extends State<BtmNavigationBar> {
           BottomNavigationBarItem(
             label: 'Overall Score',
             icon: Icon(Icons.home_max_rounded),
-            tooltip: 'Overall Score',  //长按显示的文本
+            tooltip: 'Overall Score',  //
           ),
           BottomNavigationBarItem(
             label: 'Data Viewer',

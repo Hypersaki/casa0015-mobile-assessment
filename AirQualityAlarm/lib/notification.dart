@@ -1,21 +1,5 @@
-// import 'package:flutter/material.dart';
-//
-// class notification extends StatefulWidget {
-//   const notification({super.key});
-//
-//   @override
-//   State<notification> createState() => _notificationState();
-// }
-//
-// class _notificationState extends State<notification> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-//
-// }
 import 'package:flutter/material.dart';
-
+import 'package:airqualityalarm/sysalarm.dart'; //import SystemAlarmScreen
 class Notifications extends StatefulWidget {
   @override
   _NotificationsState createState() => _NotificationsState();
@@ -102,6 +86,16 @@ class _NotificationsState extends State<Notifications> {
                 child: Text(
                   'System Alarms:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              ListTile(
+                trailing: IconButton(
+                  icon: Icon(Icons.notifications_active),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SystemAlarmsScreen()),
+                    );
+                  },
                 ),
               ),
               SwitchListTile(
