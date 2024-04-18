@@ -17,7 +17,7 @@ class _BtmNavigationBarState extends State<BtmNavigationBar> {
     OverallScore(),
     DataViewer(),
     Notifications(),
-    ConnectionScreen()
+    BluetoothConnect()
   ];
   @override
   Widget build(BuildContext context) {
