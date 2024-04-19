@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:airqualityalarm/navigationbar.dart';
+import 'package:airqualityalarm/connection.dart';
+import 'package:airqualityalarm/sensordata.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -10,6 +14,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: "Air Ring",home: const BtmNavigationBar());
+    return ChangeNotifierProvider(
+      create: (context) => SensorData(),
+      child: MaterialApp(
+        title: 'Air Quality Alarm',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const BtmNavigationBar(),
+      ),
+    );
   }
 }

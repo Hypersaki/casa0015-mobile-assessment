@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:airqualityalarm/bt_model_class.dart';  // Assuming the model class is in this file
+import 'package:airqualityalarm/sensordata.dart';
+
 
 class BluetoothConnect extends StatefulWidget {
   @override
@@ -11,80 +12,139 @@ class BluetoothConnect extends StatefulWidget {
 class _BluetoothConnectState extends State<BluetoothConnect> {
   final String targetMac = "08:3A:8D:AC:49:FA";
   BluetoothConnection? connection;
-  late BluetoothDataModel model;
+  bool isConnecting = false;
+  bool get isConnected => connection != null && connection!.isConnected;
 
   @override
   void initState() {
     super.initState();
-    model = ScopedModel.of<BluetoothDataModel>(context, rebuildOnChange: false);
   }
 
   void connect() async {
-    model.updateConnectionStatus('Connecting');
+    setState(() {
+      isConnecting = true;
+    });
+
     try {
       connection = await BluetoothConnection.toAddress(targetMac);
+      print('Connected to the device');
       setState(() {
-        model.updateConnectionStatus('Connected');
+        isConnecting = false;
       });
+
       connection!.input!.listen((data) {
-        model.updateData(String.fromCharCodes(data));
+        // TODO: Process the incoming data
+        print('Data incoming: ${String.fromCharCodes(data)}');
+        final values = String.fromCharCodes(data).trim().split(',');
+        if (values.length == 5) {
+          final sensorData = Provider.of<SensorData>(context, listen: false);
+          sensorData.update(
+            double.tryParse(values[0]) ?? 0.0,
+            double.tryParse(values[1]) ?? 0.0,
+            double.tryParse(values[2]) ?? 0.0,
+            double.tryParse(values[3]) ?? 0.0,
+            double.tryParse(values[4]) ?? 0.0,
+          );
+        }
       }).onDone(() {
-        model.updateConnectionStatus('Disconnected');
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Connection Lost'),
-            content: Text('Do you want to reconnect?'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('Reconnect'),
-                onPressed: () {
-                  Navigator.pop(context);
-                  connect();
-                },
-              ),
-              TextButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        );
+        if (mounted) {
+          setState(() {
+            isConnecting = false;
+            connection = null;
+          });
+          showReconnectDialog();
+        }
       });
     } catch (e) {
+      print('Cannot connect, exception occurred');
+      if (mounted) {
+        setState(() {
+          isConnecting = false;
+        });
+        showFailedDialog();
+      }
+    }
+  }
+
+  void disconnect() async {
+    await connection?.close();
+    if (mounted) {
       setState(() {
-        model.updateConnectionStatus('Connection Failed');
+        connection = null;
       });
     }
+  }
+
+  void showReconnectDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Connection lost'),
+          content: const Text('The connection to the device was lost.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (!isConnected) {
+                  connect();
+                }
+              },
+              child: const Text('Reconnect'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showFailedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Connection failed'),
+          content: const Text('Could not connect to the device.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Bluetooth Connection')),
-      body: ScopedModelDescendant<BluetoothDataModel>(
-        builder: (context, child, model) => Column(
+      appBar: AppBar(
+        title: const Text('ESP32 Connection'),
+      ),
+      body: Center(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Status: ${model.connectionStatus}'),
+            Text(isConnecting ? 'Connecting to $targetMac' : isConnected ? 'Connected to $targetMac' : 'Press the button to connect to $targetMac'),
+            SizedBox(height: 10),
             ElevatedButton(
-              onPressed: model.connectionStatus == 'Disconnected' ? connect : null,
-              child: Text(model.connectionStatus == 'Connecting' ? 'Connecting' : 'Connect'),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-                  if (states.contains(MaterialState.disabled)) return Colors.grey;
-                  return model.connectionStatus == 'Connected' ? Colors.green :
-                  model.connectionStatus == 'Connection Failed' ? Colors.red : Colors.blue;
-                }),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isConnecting ? Colors.grey : isConnected ? Colors.green : Colors.blue,
+                foregroundColor: Colors.white,
               ),
+              onPressed: isConnecting ? null : isConnected ? disconnect : connect,
+              child: Text(isConnected ? 'Disconnect' : 'Connect'),
             ),
-            Text('Humidity: ${model.humidity}'),
-            Text('Temperature: ${model.temperature}'),
-            Text('VOCs: ${model.vocs}'),
-            Text('CO: ${model.co}'),
-            Text('Smoke: ${model.smoke}'),
+            // Add additional UI to display data here
           ],
         ),
       ),

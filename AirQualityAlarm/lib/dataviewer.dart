@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-// Make sure to import the humidity correctly
-import 'data_hr.dart'; // Replace with the correct import path for your HumidityDataScreen
+import 'package:provider/provider.dart';
+import 'dataviewerlist/data_hr.dart';
+import 'package:airqualityalarm/sensordata.dart';
+
 
 class DataViewer extends StatefulWidget {
   @override
@@ -8,46 +10,46 @@ class DataViewer extends StatefulWidget {
 }
 
 class _DataViewerState extends State<DataViewer> {
-  // These values are assumed to be dynamic and updated accordingly
-  double humidity = 0; // Initialize with a default value or fetch from a model
-  int co2 = 400; // in parts per million (ppm)
-  int co = 6; // in ppm
-  double temperature = 0; // in Celsius
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Data Viewer'),
-        ),
-        body: ListView(
-          children: <Widget>[
-            _buildSensorTile('Humidity', '$humidity%', () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => HumidityDataScreen()),
-              );
-            }),
-            _buildSensorTile('CO2', '$co2 ppm', () {
-              // Add navigation logic to CO2 detail page
-            }),
-            _buildSensorTile('CO', '$co ppm', () {
-              // Add navigation logic to CO detail page
-            }),
-            _buildSensorTile('Temperature', '$temperature °C', () {
-              // Add navigation logic to Temperature detail page
-            }),
-          ],
-        ),
-      ),
+    // 通过Provider来监听SensorData的变化
+    return Consumer<SensorData>(
+      builder: (context, sensorData, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Data Viewer'),
+          ),
+          body: ListView(
+            children: <Widget>[
+              _buildSensorTile('Humidity', '${sensorData.humidity}%', () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => HumidityDataScreen(humidity: sensorData.humidity)),
+                );
+              }),
+              _buildSensorTile('Temperature', '${sensorData.temperature} °C', () {
+                // 导航至Temperature修改页面
+              }),
+              _buildSensorTile('VOCs', '${sensorData.ppmVOCs} ppm', () {
+                // 导航至VOCs修改页面
+              }),
+              _buildSensorTile('CO', '${sensorData.ppmCO} ppm', () {
+                // 导航至CO修改页面
+              }),
+              _buildSensorTile('Smoke', '${sensorData.ppmSmoke} ppm', () {
+                // 导航至Smoke修改页面
+              }),
+            ],
+          ),
+        );
+      },
     );
   }
 
   Widget _buildSensorTile(String title, String value, VoidCallback onTap) {
     return ListTile(
       leading: Icon(
-        Icons.square, // Replace with the actual icon
-        color: Colors.grey,
+        Icons.sensor_window, // 更换为更合适的图标
+        color: Colors.blue,
         size: 30,
       ),
       title: Text(title),
