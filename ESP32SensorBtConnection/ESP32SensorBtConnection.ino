@@ -39,7 +39,10 @@ void loop() {
     String data = String(humidity) + "," + String(temperature) + "," +
                   String(ppmVOCs) + "," + String(ppmCO) + "," + String(ppmSmoke) + "\n";
     SerialBT.print(data);
+    Serial.println(data);
+  } else {
+    // if not connected to the client, print "not connected" in the serial monitor
+    Serial.println("Bluetooth not connected!");
   }
-
-  delay(10000);
+  delay(8000);
 }

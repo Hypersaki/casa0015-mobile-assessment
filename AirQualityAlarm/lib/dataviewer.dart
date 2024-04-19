@@ -1,66 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dataviewerlist/data_hr.dart';
-import 'package:airqualityalarm/sensordata.dart';
+import 'package:airqualityalarm/sensordata.dart'; //
+import 'package:airqualityalarm/datadetailscreen.dart'; //
 
-
-class DataViewer extends StatefulWidget {
-  @override
-  _DataViewerState createState() => _DataViewerState();
-}
-
-class _DataViewerState extends State<DataViewer> {
+class DataViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // 通过Provider来监听SensorData的变化
-    return Consumer<SensorData>(
-      builder: (context, sensorData, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Data Viewer'),
-          ),
-          body: ListView(
-            children: <Widget>[
-              _buildSensorTile('Humidity', '${sensorData.humidity}%', () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => HumidityDataScreen(humidity: sensorData.humidity)),
-                );
-              }),
-              _buildSensorTile('Temperature', '${sensorData.temperature} °C', () {
-                // 导航至Temperature修改页面
-              }),
-              _buildSensorTile('VOCs', '${sensorData.ppmVOCs} ppm', () {
-                // 导航至VOCs修改页面
-              }),
-              _buildSensorTile('CO', '${sensorData.ppmCO} ppm', () {
-                // 导航至CO修改页面
-              }),
-              _buildSensorTile('Smoke', '${sensorData.ppmSmoke} ppm', () {
-                // 导航至Smoke修改页面
-              }),
-            ],
-          ),
-        );
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Data Viewer'),
+      ),
+      body: Consumer<SensorData>(
+        builder: (context, sensorData, child) => ListView(
+          children: <Widget>[
+            _buildSensorTile(context, 'Humidity', '${sensorData.humidity}%', 'HumidityDataScreen'),
+            _buildSensorTile(context, 'Temperature', '${sensorData.temperature} °C', 'TemperatureDataScreen'),
+            _buildSensorTile(context, 'VOCs', '${sensorData.vocs} ppm', 'VOCsDataScreen'),
+            _buildSensorTile(context, 'CO', '${sensorData.co} ppm', 'CODataScreen'),
+            _buildSensorTile(context, 'Smoke', '${sensorData.smoke} ppm', 'SmokeDataScreen'),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildSensorTile(String title, String value, VoidCallback onTap) {
+  Widget _buildSensorTile(BuildContext context, String title, String value, String detailScreenName) {
     return ListTile(
       leading: Icon(
-        Icons.sensor_window, // 更换为更合适的图标
+        Icons.sensors,
         color: Colors.blue,
         size: 30,
       ),
       title: Text(title),
-      trailing: Text(
-        value,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      onTap: onTap,
+      subtitle: Text(value),
+      trailing: Icon(Icons.arrow_forward),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) {
+            // 这里根据传递的detailScreenName动态选择要导航的页面
+            return DataDetailScreen(title: title, value: value, detailScreenName: detailScreenName);
+          }),
+        );
+      },
     );
   }
 }

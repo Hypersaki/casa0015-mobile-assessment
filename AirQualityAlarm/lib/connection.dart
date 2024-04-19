@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:airqualityalarm/sensordata.dart';
 
-
 class BluetoothConnect extends StatefulWidget {
   @override
   _BluetoothConnectState createState() => _BluetoothConnectState();
@@ -12,30 +11,35 @@ class BluetoothConnect extends StatefulWidget {
 class _BluetoothConnectState extends State<BluetoothConnect> {
   final String targetMac = "08:3A:8D:AC:49:FA";
   BluetoothConnection? connection;
-  bool isConnecting = false;
-  bool get isConnected => connection != null && connection!.isConnected;
+  bool isConnecting = false; // add isConnecting and ini
 
   @override
   void initState() {
     super.initState();
+    var sensorData = Provider.of<SensorData>(context, listen: false);
+    if (sensorData.isConnected && connection == null) {
+      reconnect(); // try to reconnect
+    }
   }
 
   void connect() async {
     setState(() {
-      isConnecting = true;
+      isConnecting = true; // when connecting - set true
+      Provider.of<SensorData>(context, listen: false).updateConnectionStatus(true);
     });
 
     try {
       connection = await BluetoothConnection.toAddress(targetMac);
       print('Connected to the device');
       setState(() {
-        isConnecting = false;
+        isConnecting = false; // connection complete - set false
+        Provider.of<SensorData>(context, listen: false).updateConnectionStatus(true);
       });
 
       connection!.input!.listen((data) {
-        // TODO: Process the incoming data
-        print('Data incoming: ${String.fromCharCodes(data)}');
-        final values = String.fromCharCodes(data).trim().split(',');
+        String receivedData = String.fromCharCodes(data).trim();
+        print('Received data: $receivedData');
+        final values = receivedData.split(',');
         if (values.length == 5) {
           final sensorData = Provider.of<SensorData>(context, listen: false);
           sensorData.update(
@@ -47,11 +51,8 @@ class _BluetoothConnectState extends State<BluetoothConnect> {
           );
         }
       }).onDone(() {
+        Provider.of<SensorData>(context, listen: false).updateConnectionStatus(false);
         if (mounted) {
-          setState(() {
-            isConnecting = false;
-            connection = null;
-          });
           showReconnectDialog();
         }
       });
@@ -59,7 +60,8 @@ class _BluetoothConnectState extends State<BluetoothConnect> {
       print('Cannot connect, exception occurred');
       if (mounted) {
         setState(() {
-          isConnecting = false;
+          isConnecting = false; // connection fail - set false
+          Provider.of<SensorData>(context, listen: false).updateConnectionStatus(false);
         });
         showFailedDialog();
       }
@@ -68,11 +70,14 @@ class _BluetoothConnectState extends State<BluetoothConnect> {
 
   void disconnect() async {
     await connection?.close();
-    if (mounted) {
-      setState(() {
-        connection = null;
-      });
-    }
+    setState(() {
+      connection = null; // 清除连接对象
+      Provider.of<SensorData>(context, listen: false).updateConnectionStatus(false);
+    });
+  }
+
+  void reconnect() {
+    connect(); // Directly trying to reconnect
   }
 
   void showReconnectDialog() {
@@ -81,14 +86,12 @@ class _BluetoothConnectState extends State<BluetoothConnect> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Connection lost'),
-          content: const Text('The connection to the device was lost.'),
+          content: const Text('The connection to the device was lost. Would you like to reconnect?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                if (!isConnected) {
-                  connect();
-                }
+                connect(); // try to reconnect
               },
               child: const Text('Reconnect'),
             ),
@@ -126,15 +129,16 @@ class _BluetoothConnectState extends State<BluetoothConnect> {
 
   @override
   Widget build(BuildContext context) {
+    bool isConnected = Provider.of<SensorData>(context).isConnected;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ESP32 Connection'),
+        title: const Text('Sensor Device Connection'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(isConnecting ? 'Connecting to $targetMac' : isConnected ? 'Connected to $targetMac' : 'Press the button to connect to $targetMac'),
+            Text(isConnected ? 'Connected to the Sensor Device' : 'Press the button to connect to the Sensor Device'),
             SizedBox(height: 10),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -142,9 +146,8 @@ class _BluetoothConnectState extends State<BluetoothConnect> {
                 foregroundColor: Colors.white,
               ),
               onPressed: isConnecting ? null : isConnected ? disconnect : connect,
-              child: Text(isConnected ? 'Disconnect' : 'Connect'),
+              child: Text(isConnecting ? 'Connecting...' : isConnected ? 'Disconnect' : 'Connect'),
             ),
-            // Add additional UI to display data here
           ],
         ),
       ),
@@ -155,5 +158,6 @@ class _BluetoothConnectState extends State<BluetoothConnect> {
   void dispose() {
     super.dispose();
     connection?.dispose();
+    Provider.of<SensorData>(context, listen: false).updateConnectionStatus(false);
   }
 }

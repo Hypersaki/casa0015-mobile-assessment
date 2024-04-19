@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:airqualityalarm/navigationbar.dart';
-import 'package:airqualityalarm/connection.dart';
 import 'package:airqualityalarm/sensordata.dart';
 
 
