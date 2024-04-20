@@ -10,14 +10,14 @@ class COModel with ChangeNotifier {
     }
   }
 //threshold settings
-  final double goodMax = 80.0;
-  final double poorMin = 80.0;
-  final double poorMax = 210.0;
+  final double COGoodMax = 80.0;
+  final double COPoorMin = 80.0;
+  final double COPoorMax = 210.0;
 
   String get status {
-    if (_co < goodMax) {
+    if (_co < COGoodMax) {
       return 'Good';
-    } else if (_co >= poorMin && _co <= poorMax) {
+    } else if (_co >= COPoorMin && _co <= COPoorMax) {
       return 'Poor';
     } else {
       return 'Bad';

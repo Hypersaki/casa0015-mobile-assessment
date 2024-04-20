@@ -1,4 +1,3 @@
-import 'package:airqualityalarm/connection.dart';
 import 'package:flutter/material.dart';
 import 'package:airqualityalarm/overallscore.dart';
 import 'package:airqualityalarm/dataviewer.dart';

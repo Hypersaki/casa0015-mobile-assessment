@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:airqualityalarm/sensordata.dart';
 
-class HumidityDetailScreen extends StatefulWidget {
+class VOCsDetailScreen extends StatefulWidget {
   final SensorData sensorData;
 
-  HumidityDetailScreen({Key? key, required this.sensorData}) : super(key: key);
+  VOCsDetailScreen({Key? key, required this.sensorData}) : super(key: key);
 
   @override
-  _HumidityDetailScreenState createState() => _HumidityDetailScreenState();
+  _VOCsDetailScreenState createState() => _VOCsDetailScreenState();
 }
 
-class _HumidityDetailScreenState extends State<HumidityDetailScreen> {
+class _VOCsDetailScreenState extends State<VOCsDetailScreen> {
   bool isGoodStarSelected = false;
   bool isPoorStarSelected = false;
   bool isBadStarSelected = false;
 
   @override
   Widget build(BuildContext context) {
-    // Use widget.sensorData instead of Provider.of<SensorData>(context)
-    String thresholdStatus = widget.sensorData.HrStatus;
+    String thresholdStatus = widget.sensorData.VOCsStatus;
     isGoodStarSelected = thresholdStatus == 'Good';
     isPoorStarSelected = thresholdStatus == 'Poor';
     isBadStarSelected = thresholdStatus == 'Bad';
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Humidity'),
+        title: Text('VOCs'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -37,7 +36,7 @@ class _HumidityDetailScreenState extends State<HumidityDetailScreen> {
             SizedBox(height: 20),
             Center(
               child: Text(
-                '${widget.sensorData.humidity.toStringAsFixed(1)}%',
+                '${widget.sensorData.vocs.toStringAsFixed(1)} ppm',
                 style: TextStyle(
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
@@ -54,11 +53,11 @@ class _HumidityDetailScreenState extends State<HumidityDetailScreen> {
             ),
             SizedBox(height: 10),
             ThresholdIndicator(
-              value: widget.sensorData.humidity,
-              goodMin: widget.sensorData.HrGoodMin,
-              goodMax: widget.sensorData.HrGoodMax,
-              poorMin: widget.sensorData.HrPoorMin,
-              poorMax: widget.sensorData.HrPoorMax,
+              value: widget.sensorData.vocs,
+              goodMin: widget.sensorData.VOCsGoodMin,
+              goodMax: widget.sensorData.VOCsGoodMax,
+              poorMin: widget.sensorData.VOCsPoorMin,
+              poorMax: widget.sensorData.VOCsPoorMax,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -94,6 +93,7 @@ class _HumidityDetailScreenState extends State<HumidityDetailScreen> {
     );
   }
 }
+
 
 class ThresholdIndicator extends StatelessWidget {
   final double value;

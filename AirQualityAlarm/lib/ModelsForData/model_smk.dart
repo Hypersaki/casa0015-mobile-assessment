@@ -10,14 +10,14 @@ class SmokeModel with ChangeNotifier {
     }
   }
 //threshold settings
-  final double goodMax = 110.0;
-  final double poorMin = 110.0;
-  final double poorMax = 230.0;
+  final double SMKGoodMax = 110.0;
+  final double SMKPoorMin = 110.0;
+  final double SMKPoorMax = 230.0;
 
   String get status {
-    if (_smoke < goodMax) {
+    if (_smoke < SMKGoodMax) {
       return 'Good';
-    } else if (_smoke >= poorMin && _smoke <= poorMax) {
+    } else if (_smoke >= SMKPoorMin && _smoke <= SMKPoorMax) {
       return 'Poor';
     } else {
       return 'Bad';

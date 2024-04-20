@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:airqualityalarm/sensordata.dart';
 
-class HumidityDetailScreen extends StatefulWidget {
+class CODetailScreen extends StatefulWidget {
   final SensorData sensorData;
 
-  HumidityDetailScreen({Key? key, required this.sensorData}) : super(key: key);
+  CODetailScreen({Key? key, required this.sensorData}) : super(key: key);
 
   @override
-  _HumidityDetailScreenState createState() => _HumidityDetailScreenState();
+  _CODetailScreenState createState() => _CODetailScreenState();
 }
 
-class _HumidityDetailScreenState extends State<HumidityDetailScreen> {
+class _CODetailScreenState extends State<CODetailScreen> {
   bool isGoodStarSelected = false;
   bool isPoorStarSelected = false;
   bool isBadStarSelected = false;
 
   @override
   Widget build(BuildContext context) {
-    // Use widget.sensorData instead of Provider.of<SensorData>(context)
-    String thresholdStatus = widget.sensorData.HrStatus;
+    String thresholdStatus = widget.sensorData.COStatus;
     isGoodStarSelected = thresholdStatus == 'Good';
     isPoorStarSelected = thresholdStatus == 'Poor';
     isBadStarSelected = thresholdStatus == 'Bad';
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Humidity'),
+        title: Text('CO'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -33,11 +32,11 @@ class _HumidityDetailScreenState extends State<HumidityDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Placeholder(fallbackHeight: 200.0), // This can be replaced with an actual image
+            Placeholder(fallbackHeight: 200.0),  // This can be replaced with an actual image
             SizedBox(height: 20),
             Center(
               child: Text(
-                '${widget.sensorData.humidity.toStringAsFixed(1)}%',
+                '${widget.sensorData.co.toStringAsFixed(1)} ppm',
                 style: TextStyle(
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
@@ -54,11 +53,11 @@ class _HumidityDetailScreenState extends State<HumidityDetailScreen> {
             ),
             SizedBox(height: 10),
             ThresholdIndicator(
-              value: widget.sensorData.humidity,
-              goodMin: widget.sensorData.HrGoodMin,
-              goodMax: widget.sensorData.HrGoodMax,
-              poorMin: widget.sensorData.HrPoorMin,
-              poorMax: widget.sensorData.HrPoorMax,
+              value: widget.sensorData.co,
+              goodMin: widget.sensorData.COGoodMin,
+              goodMax: widget.sensorData.COGoodMax,
+              poorMin: widget.sensorData.COPoorMin,
+              poorMax: widget.sensorData.COPoorMax,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -73,7 +72,6 @@ class _HumidityDetailScreenState extends State<HumidityDetailScreen> {
       ),
     );
   }
-
   Widget _buildSelectableStar(bool isSelected, String status) {
     return IconButton(
       icon: Icon(
@@ -94,6 +92,7 @@ class _HumidityDetailScreenState extends State<HumidityDetailScreen> {
     );
   }
 }
+
 
 class ThresholdIndicator extends StatelessWidget {
   final double value;
