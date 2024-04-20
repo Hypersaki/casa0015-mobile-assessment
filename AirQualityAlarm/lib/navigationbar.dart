@@ -17,7 +17,6 @@ class _BtmNavigationBarState extends State<BtmNavigationBar> {
     OverallScore(),
     DataViewer(),
     Notifications(),
-    BluetoothConnect()
   ];
   @override
   Widget build(BuildContext context) {
@@ -49,11 +48,6 @@ class _BtmNavigationBarState extends State<BtmNavigationBar> {
             icon: Icon(Icons.notifications_active),
             tooltip: 'Notification',
           ),
-          BottomNavigationBarItem(
-            label: 'connection',
-            icon: Icon(Icons.bluetooth_searching_rounded),
-            tooltip: 'connection',
-          )
         ],
       ),
     );
