@@ -1,60 +1,139 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:airqualityalarm/sensordata.dart';
 
-class OverallScore extends StatefulWidget {
+class OverallScoreScreen extends StatefulWidget {
   @override
-  _OverallScoreState createState() => _OverallScoreState();
+  _OverallScoreScreenState createState() => _OverallScoreScreenState();
 }
 
-class _OverallScoreState extends State<OverallScore> {
-  // Assuming score is a dynamic value that can be updated
-  int score = 73; // Initialize with a default value or fetch from a model
+class _OverallScoreScreenState extends State<OverallScoreScreen> {
+  int _statusPriority(String status) {
+    switch (status) {
+      case 'Bad':
+        return 1;  // Highest priority
+      case 'Poor':
+        return 2;  // Poor priority
+      case 'Good':
+        return 3;  // Lowest priority
+      default:
+        return 4;  // Unknown status
+    }
+  }
+
+  List<Widget> getStatusBars(SensorData sensorData) {
+    List<StatusBar> bars = [
+      StatusBar(status: sensorData.HrStatus, label: 'Humidity'),
+      StatusBar(status: sensorData.TempStatus, label: 'Temperature'),
+      StatusBar(status: sensorData.VOCsStatus, label: 'VOCs'),
+      StatusBar(status: sensorData.COStatus, label: 'CO'),
+      StatusBar(status: sensorData.SMKStatus, label: 'Smoke'),
+    ];
+
+    bars.sort((a, b) => _statusPriority(a.status).compareTo(_statusPriority(b.status)));
+    return bars.map((bar) => bar.build(context)).toList();
+  }
+
+  double calculateOverallScore(SensorData sensorData) {
+    double score = 0.0;
+    score += sensorData.HrStatus == 'Good' ? 20 * 0.8 : sensorData.HrStatus == 'Poor' ? 10 * 0.8 : 0;
+    score += sensorData.TempStatus == 'Good' ? 20 * 0.7 : sensorData.TempStatus == 'Poor' ? 10 * 0.7 : 0;
+    score += sensorData.VOCsStatus == 'Good' ? 20 * 1.3 : sensorData.VOCsStatus == 'Poor' ? 10 * 1.3 : 0;
+    score += sensorData.COStatus == 'Good' ? 20 * 1.1 : sensorData.COStatus == 'Poor' ? 10 * 1.1 : 0;
+    score += sensorData.SMKStatus == 'Good' ? 20 * 1.1 : sensorData.SMKStatus == 'Poor' ? 10 * 1.1 : 0;
+    return score;
+  }
+
+  Color getCircleColor(double score) {
+    if (score >= 90) return Color.fromARGB(100, 54, 244, 215);
+    else if (score >= 80) return Colors.green;
+    else if (score >= 70) return Colors.yellow;
+    else if (score >= 60) return Colors.orange;
+    else if (score >= 50) return Colors.deepOrange;
+    else if (score >= 40) return Colors.red;
+    else return Color.fromARGB(100, 32, 32, 32);
+  }
+
+  double getCircleSize(BuildContext context, double score) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    return screenWidth * (0.8 + (score / 100) * (0.20 - 0.125));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Overall Score'),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 20),
-            Center(
-              child: CircularProgressIndicator(
-                value: score / 100, // Now this is dynamic and can be updated
-                backgroundColor: Colors.grey[300],
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                strokeWidth: 6,
+    SensorData sensorData = Provider.of<SensorData>(context);
+    double overallScore = calculateOverallScore(sensorData);
+    Color circleColor = getCircleColor(overallScore);
+    double circleSize = getCircleSize(context, overallScore);
+    List<Widget> statusBars = getStatusBars(sensorData);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Overall Score'),
+      ),
+      body: Column(
+        children: [
+          Container(
+            width: circleSize,
+            height: circleSize,
+            decoration: BoxDecoration(
+                color: circleColor,
+                shape: BoxShape.circle
+            ),
+            child: Center(
+              child: Text(
+                overallScore.toStringAsFixed(1),
+                style: TextStyle(
+                    fontSize: 36,
+                    color: Colors.black38,
+                    fontWeight: FontWeight.bold
+                ),
               ),
             ),
-            SizedBox(height: 40),
-            Text(
-              '$score', // Now this is dynamic and can be updated
-              style: TextStyle(
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          Spacer(),  // Use a Spacer to push the status bars to the bottom
+          Container(
+            child: ListView(
+              shrinkWrap: true,  // This makes the ListView take the minimum amount of vertical space
+              children: statusBars,
             ),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 3,
-                children: List.generate(6, (index) {
-                  return Card(
-                    child: Center(
-                      child: Icon(
-                        Icons.data_usage_sharp, // Replace with the appropriate icon
-                        size: 50,
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
+class StatusBar extends StatelessWidget {
+  final String label;
+  final String status;
+
+  StatusBar({Key? key, required this.label, required this.status}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    Color color;
+    switch (status) {
+      case 'Good':
+        color = Colors.green;
+        break;
+      case 'Poor':
+        color = Colors.yellow;
+        break;
+      case 'Bad':
+        color = Colors.red;
+        break;
+      default:
+        color = Colors.grey;
+    }
+
+    return Container(
+      alignment: Alignment.center, // Make the container center
+      color: color,
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: Text(label, style: TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+}

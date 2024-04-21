@@ -13,7 +13,7 @@ class BtmNavigationBar extends StatefulWidget {
 class _BtmNavigationBarState extends State<BtmNavigationBar> {
   int _currentIndex=0;
   List _pageList=[
-    OverallScore(),
+    OverallScoreScreen(),
     DataViewer(),
     Notifications(),
   ];

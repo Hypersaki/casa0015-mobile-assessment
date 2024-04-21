@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:airqualityalarm/sysalarm.dart'; //import SystemAlarmScreen
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 class Notifications extends StatefulWidget {
   @override
   _NotificationsState createState() => _NotificationsState();
