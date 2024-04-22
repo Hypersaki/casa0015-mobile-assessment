@@ -1,179 +1,32 @@
-import 'package:flutter/material.dart';
-import 'package:airqualityalarm/sysalarm.dart'; //import SystemAlarmScreen
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class Notifications extends StatefulWidget {
-  @override
-  _NotificationsState createState() => _NotificationsState();
-}
+class NotificationService {
+    static final NotificationService _notificationService = NotificationService._internal();
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-class _NotificationsState extends State<Notifications> {
-  bool singlePoorIndicator = true;
-  bool overallScoreLow = true;
-  bool overallScoreStarred = false;
-  bool anyPoorIndicator = true;
-  bool overallScoreCritical = false;
-  bool overallScoreCriticalStarred = false;
-  TextEditingController scoreController = TextEditingController(text: "80");
-  TextEditingController criticalScoreController = TextEditingController(text: "65");
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Notifications'),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'System Notifications:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-              SwitchListTile(
-                title: const Text('Single poor indicator'),
-                value: singlePoorIndicator,
-                onChanged: (bool value) {
-                  setState(() {
-                    singlePoorIndicator = value;
-                  });
-                },
-              ),
-              ListTile(
-                title: const Text('Overall Score <'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: 80,
-                      child: TextFormField(
-                        controller: scoreController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          hintText: 'Value',
-                        ),
-                      ),
-                    ),
-                    Switch(
-                      value: overallScoreLow,
-                      onChanged: (bool value) {
-                        setState(() {
-                          overallScoreLow = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              CheckboxListTile(
-                title: const Text('Mark with star'),
-                value: overallScoreStarred,
-                onChanged: (bool? value) {
-                  setState(() {
-                    overallScoreStarred = value!;
-                  });
-                },
-                secondary: const Icon(
-                  Icons.star,
-                  color: Colors.orange,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'System Alarms:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-              ListTile(
-                trailing: IconButton(
-                  icon: Icon(Icons.notifications_active),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => SystemAlarmsScreen()),
-                    );
-                  },
-                ),
-              ),
-              SwitchListTile(
-                title: const Text('Any poor indicator'),
-                value: anyPoorIndicator,
-                onChanged: (bool value) {
-                  setState(() {
-                    anyPoorIndicator = value;
-                  });
-                },
-              ),
-              ListTile(
-                title: const Text('Overall Score <'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: 80,
-                      child: TextFormField(
-                        controller: criticalScoreController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          hintText: 'Value',
-                        ),
-                      ),
-                    ),
-                    Switch(
-                      value: overallScoreCritical,
-                      onChanged: (bool value) {
-                        setState(() {
-                          overallScoreCritical = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              CheckboxListTile(
-                title: const Text('Mark with star'),
-                value: overallScoreCriticalStarred,
-                onChanged: (bool? value) {
-                  setState(() {
-                    overallScoreCriticalStarred = value!;
-                  });
-                },
-                secondary: const Icon(
-                  Icons.star,
-                  color: Colors.orange,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(double.infinity, 40),
-                    ),
-                    onPressed: () {
-                      // Handle save action
-                    },
-                    child: const Text('Save'),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  factory NotificationService() {
+    return _notificationService;
   }
 
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    scoreController.dispose();
-    criticalScoreController.dispose();
-    super.dispose();
+  NotificationService._internal();
+
+  Future<void> init() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> showNotification(String title, String body) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'your channel id', 'your channel name',
+        importance: Importance.max, priority: Priority.high, showWhen: false);
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+    await _flutterLocalNotificationsPlugin.show(0, title, body, platformChannelSpecifics);
   }
 }

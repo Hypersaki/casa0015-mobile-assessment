@@ -45,13 +45,13 @@ class _OverallScoreScreenState extends State<OverallScoreScreen> {
   }
 
   Color getCircleColor(double score) {
-    if (score >= 90) return Color.fromARGB(100, 54, 244, 215);
+    if (score >= 90) return Color.fromARGB(128, 54, 244, 215);
     else if (score >= 80) return Colors.green;
     else if (score >= 70) return Colors.yellow;
     else if (score >= 60) return Colors.orange;
     else if (score >= 50) return Colors.deepOrange;
     else if (score >= 40) return Colors.red;
-    else return Color.fromARGB(100, 32, 32, 32);
+    else return Color.fromARGB(196, 150, 0, 0);
   }
 
   double getCircleSize(BuildContext context, double score) {
@@ -91,7 +91,7 @@ class _OverallScoreScreenState extends State<OverallScoreScreen> {
               ),
             ),
           ),
-          Spacer(),  // Use a Spacer to push the status bars to the bottom
+          Spacer(),  // push the status bars to the bottom
           Container(
             child: ListView(
               shrinkWrap: true,  // This makes the ListView take the minimum amount of vertical space
@@ -132,8 +132,15 @@ class StatusBar extends StatelessWidget {
       color: color,
       child: Padding(
         padding: EdgeInsets.all(8),
-        child: Text(label, style: TextStyle(color: Colors.white)),
+        child: Text(label,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold
+          )
+        ),
       ),
     );
   }
 }
+
+

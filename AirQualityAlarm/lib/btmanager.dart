@@ -7,7 +7,7 @@ class BluetoothManager {
   factory BluetoothManager() => _instance;
 
   BluetoothConnection? connection;
-  final String targetMac = "08:3A:8D:AC:49:FA";//ESP32 MAC add
+  final String targetMac = "08:3A:8D:AC:49:FA";//ESP32 MAC address
   bool isConnecting = false;
   bool isConnected = false;
 
@@ -30,7 +30,6 @@ class BluetoothManager {
       print('Connected to the device');
 
       connection!.input!.listen((data) {
-        // 处理数据
         String receivedData = String.fromCharCodes(data).trim();
         print('Received data: $receivedData');
         final values = receivedData.split(',');
@@ -46,13 +45,12 @@ class BluetoothManager {
       }).onDone(() {
         isConnected = false;
         isConnecting = false;
-        // 处理断开连接
         sensorData?.updateConnectionStatus(false);
       });
     } catch (e) {
       isConnected = false;
       isConnecting = false;
-      // 处理错误
+      // process failure
       print('Cannot connect, exception occurred');
       sensorData?.updateConnectionStatus(false);
     }

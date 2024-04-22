@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:airqualityalarm/overallscore.dart';
 import 'package:airqualityalarm/dataviewer.dart';
-import 'package:airqualityalarm/notification.dart';
+import 'package:airqualityalarm/notificationalarmsettings.dart';
 
 class BtmNavigationBar extends StatefulWidget {
   const BtmNavigationBar({super.key});
@@ -15,7 +15,7 @@ class _BtmNavigationBarState extends State<BtmNavigationBar> {
   List _pageList=[
     OverallScoreScreen(),
     DataViewer(),
-    Notifications(),
+    NotificationAlarmsettingsSettings(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -43,9 +43,9 @@ class _BtmNavigationBarState extends State<BtmNavigationBar> {
             tooltip: 'Data Viewer',
           ),
           BottomNavigationBarItem(
-            label: 'Notification',
+            label: 'Alert',
             icon: Icon(Icons.notifications_active),
-            tooltip: 'Notification',
+            tooltip: 'Notification & Alarm',
           ),
         ],
       ),
