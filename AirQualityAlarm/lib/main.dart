@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:airqualityalarm/notification.dart';
@@ -10,12 +11,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var d = await check();
   print('------->${d}');
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+  flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
   await NotificationService().init(); //
   runApp(
-    Provider<SensorData>(
-      create: (context) => SensorData(),
-      child: MyApp(),
-    ),
+      MyApp()
   );
 }
 
@@ -28,39 +30,50 @@ Future<bool> check() async {
     Permission.bluetoothScan,
     Permission.bluetoothAdvertise,
   ].request();
-  isGranted = await Permission.bluetoothScan.request().isGranted;
+  isGranted = await Permission.bluetoothScan
+      .request()
+      .isGranted;
   print(isGranted);
   statuses.forEach((key, value) {
     print('$key------>$value');
     isGranted = isGranted && value.isGranted;
-
   });
   return isGranted;
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
+
+  final btManager = BluetoothManager();
   @override
   Widget build(BuildContext context) {
-    // create SensorData sl
-    final sensorData = SensorData();
-    // get BluetoothManager dl
-    final btManager = BluetoothManager();
-    // SensorData to BluetoothManager sl
-    btManager.setSensorData(sensorData);
-    // try to connect
-    btManager.connect();
+
 
     return ChangeNotifierProvider(
-      create: (context) => sensorData,
-      child: MaterialApp(
-        title: 'Air Quality Alarm',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: const BtmNavigationBar(),
-      ),
+      create: (context)=>SensorData(),
+      builder: (context, widget) {
+        return Consumer<SensorData>(
+          builder: (context, provider, child) {
+            btManager.setSensorData(provider);
+            btManager.connect();
+            return MaterialApp(
+              title: 'Air Quality Alarm',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: const BtmNavigationBar(),
+            );
+          },
+        );
+      },
+      // child: MaterialApp(
+      //   title: 'Air Quality Alarm',
+      //   theme: ThemeData(
+      //     primarySwatch: Colors.blue,
+      //   ),
+      //   home: const BtmNavigationBar(),
+      // ),
     );
   }
 }

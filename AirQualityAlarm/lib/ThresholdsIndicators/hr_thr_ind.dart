@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:airqualityalarm/sensordata.dart';
 import 'package:airqualityalarm/notification.dart'; // Import the NotificationService
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 
 class HumidityDetailScreen extends StatefulWidget {
   final SensorData sensorData;
+
   HumidityDetailScreen({Key? key, required this.sensorData}) : super(key: key);
+
   @override
   _HumidityDetailScreenState createState() => _HumidityDetailScreenState();
 }
@@ -57,12 +60,16 @@ class _HumidityDetailScreenState extends State<HumidityDetailScreen> {
             Placeholder(fallbackHeight: 200.0), // TODO: change to a picture
             SizedBox(height: 20),
             Center(
-              child: Text(
-                '${widget.sensorData.humidity.toStringAsFixed(1)}%',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Consumer<SensorData>(
+                builder: (context, sensorData, child) {
+                  return Text(
+                    '${sensorData.humidity.toStringAsFixed(1)}%',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                },
               ),
             ),
             SizedBox(height: 20),

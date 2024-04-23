@@ -21,14 +21,18 @@ class _DataViewerState extends State<DataViewer> {
       appBar: AppBar(
         title: Text('Data Viewer'),
       ),
-      body: ListView(
-        children: <Widget>[
-          _buildSensorTile(context, 'humidity', sensorData.humidity),
-          _buildSensorTile(context, 'temperature', sensorData.temperature),
-          _buildSensorTile(context, 'vocs', sensorData.vocs),
-          _buildSensorTile(context, 'co', sensorData.co),
-          _buildSensorTile(context, 'smoke', sensorData.smoke),
-        ],
+      body: Consumer<SensorData>(
+        builder: (context, sensorData, child) {
+          return ListView(
+            children: <Widget>[
+              _buildSensorTile(context, 'humidity', sensorData.humidity),
+              _buildSensorTile(context, 'temperature', sensorData.temperature),
+              _buildSensorTile(context, 'vocs', sensorData.vocs),
+              _buildSensorTile(context, 'co', sensorData.co),
+              _buildSensorTile(context, 'smoke', sensorData.smoke),
+            ],
+          );
+        },
       ),
     );
   }

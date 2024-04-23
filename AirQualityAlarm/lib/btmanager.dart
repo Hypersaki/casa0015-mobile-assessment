@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:airqualityalarm/sensordata.dart';
 
@@ -20,6 +23,9 @@ class BluetoothManager {
   }
 
   Future<void> connect() async {
+    // if (isConnected || isConnecting) return;
+    // connectTemp();
+    // return;
     if (isConnected || isConnecting) return;
 
     isConnecting = true;
@@ -56,7 +62,24 @@ class BluetoothManager {
     }
   }
 
+
+  Timer? timer;
+  Future<void> connectTemp()async {
+    isConnecting = true;
+    timer = Timer.periodic(Duration(seconds: 5), (timer) {
+      print('----->');
+      sensorData?.update(
+        Random.secure().nextDouble()*100,
+        Random.secure().nextDouble()*100,
+        Random.secure().nextDouble()*100,
+        Random.secure().nextDouble()*100,
+        Random.secure().nextDouble()*100,
+      );
+    });
+  }
+
   void disconnect() async {
+    timer?.cancel();
     await connection?.close();
     isConnected = false;
     sensorData?.updateConnectionStatus(false);

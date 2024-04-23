@@ -1,54 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:airqualityalarm/sensordata.dart';
+import 'package:airqualityalarm/notification.dart'; // Import the NotificationService
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 
 class TemperatureDetailScreen extends StatefulWidget {
   final SensorData sensorData;
 
-  TemperatureDetailScreen({Key? key, required this.sensorData}) : super(key: key);
+  TemperatureDetailScreen({Key? key, required this.sensorData})
+      : super(key: key);
 
   @override
-  _TemperatureDetailScreenState createState() => _TemperatureDetailScreenState();
+  _TemperatureDetailScreenState createState() =>
+      _TemperatureDetailScreenState();
 }
 
 class _TemperatureDetailScreenState extends State<TemperatureDetailScreen> {
-  bool isGoodStarSelected = false;
-  bool isPoorStarSelected = false;
-  bool isBadStarSelected = false;
+  Map<String, bool> starStatus = {'Good': false, 'Poor': false, 'Bad': false};
+  late SharedPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    NotificationService().init();
+    _loadSettings();
+  }
+
+  void _loadSettings() async {
+    prefs = await SharedPreferences.getInstance();
+    starStatus['Poor'] = prefs.getBool('TempPoor') ?? false;
+    starStatus['Bad'] = prefs.getBool('TempBad') ?? false;
+    setState(() {});
+  }
+
+  void onStarTap(String status) {
+    setState(() {
+      starStatus[status] = !starStatus[status]!;
+      prefs.setBool('Temp' + status, starStatus[status]!);
+      widget.sensorData.updateStarStatus('Temp' + status, starStatus[status]!);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    String thresholdStatus = widget.sensorData.TempStatus;
-    isGoodStarSelected = thresholdStatus == 'Good';
-    isPoorStarSelected = thresholdStatus == 'Poor';
-    isBadStarSelected = thresholdStatus == 'Bad';
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Temperature'),
+        title: Text('Details of Temperature'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Placeholder(fallbackHeight: 200.0), // This can be replaced with an actual image
+            Placeholder(fallbackHeight: 200.0), // TODO: change to a picture
             SizedBox(height: 20),
             Center(
-              child: Text(
-                '${widget.sensorData.temperature.toStringAsFixed(1)}°C',
-                style: TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Consumer<SensorData>(
+                builder: (context, sensorData, child) {
+                  return Text(
+                    '${sensorData.temperature.toStringAsFixed(1)}°C',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                },
               ),
             ),
             SizedBox(height: 20),
-            Text(
-              'Reference Threshold',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            Center(
+              child: Text(
+                'Reference Threshold',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             SizedBox(height: 10),
@@ -58,42 +85,15 @@ class _TemperatureDetailScreenState extends State<TemperatureDetailScreen> {
               goodMax: widget.sensorData.TempGoodMax,
               poorMin: widget.sensorData.TempPoorMin,
               poorMax: widget.sensorData.TempPoorMax,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _buildSelectableStar(isGoodStarSelected, 'Good'),
-                _buildSelectableStar(isPoorStarSelected, 'Poor'),
-                _buildSelectableStar(isBadStarSelected, 'Bad'),
-              ],
+              starStatus: starStatus,
+              onStarTap: onStarTap,
             ),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildSelectableStar(bool isSelected, String status) {
-    return IconButton(
-      icon: Icon(
-        isSelected ? Icons.star : Icons.star_border,
-        color: isSelected ? Colors.orange : Colors.grey,
-      ),
-      onPressed: () {
-        setState(() {
-          if (status == 'Good') {
-            isGoodStarSelected = !isGoodStarSelected;
-          } else if (status == 'Poor') {
-            isPoorStarSelected = !isPoorStarSelected;
-          } else if (status == 'Bad') {
-            isBadStarSelected = !isBadStarSelected;
-          }
-        });
-      },
-    );
-  }
 }
-
 
 class ThresholdIndicator extends StatelessWidget {
   final double value;
@@ -101,6 +101,8 @@ class ThresholdIndicator extends StatelessWidget {
   final double goodMax;
   final double poorMin;
   final double poorMax;
+  final Map<String, bool> starStatus;
+  final Function(String) onStarTap;
 
   const ThresholdIndicator({
     Key? key,
@@ -109,30 +111,31 @@ class ThresholdIndicator extends StatelessWidget {
     required this.goodMax,
     required this.poorMin,
     required this.poorMax,
+    required this.starStatus,
+    required this.onStarTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String threshold;
-    Color color;
+    String threshold = value >= goodMin && value <= goodMax
+        ? 'Good'
+        : (value >= poorMin && value <= poorMax ? 'Poor' : 'Bad');
 
-    if (value >= goodMin && value <= goodMax) {
-      threshold = 'Good';
-      color = Colors.green;
-    } else if ((value >= poorMin && value < goodMin) || (value > goodMax && value <= poorMax)) {
-      threshold = 'Poor';
-      color = Colors.amber;
-    } else {
-      threshold = 'Bad';
-      color = Colors.red;
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ThresholdLabel(threshold: 'Good', value: '${goodMin}%-${goodMax}%', isActive: threshold == 'Good'),
-        ThresholdLabel(threshold: 'Poor', value: '${poorMin}%-${poorMax}%', isActive: threshold == 'Poor'),
-        ThresholdLabel(threshold: 'Bad', value: '<${poorMin}% or >${poorMax}%', isActive: threshold == 'Bad'),
+        ThresholdLabel(
+          threshold: 'Poor',
+          value: 'Poor: ≥${poorMin}°C',
+          isActive: starStatus['Poor'] ?? false,
+          onSelected: () => onStarTap('Poor'),
+        ),
+        ThresholdLabel(
+          threshold: 'Bad',
+          value: 'Bad: ≥${poorMax}°C',
+          isActive: starStatus['Bad'] ?? false,
+          onSelected: () => onStarTap('Bad'),
+        ),
       ],
     );
   }
@@ -142,39 +145,39 @@ class ThresholdLabel extends StatelessWidget {
   final String threshold;
   final String value;
   final bool isActive;
+  final VoidCallback onSelected;
 
   const ThresholdLabel({
     Key? key,
     required this.threshold,
     required this.value,
     required this.isActive,
+    required this.onSelected,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          threshold,
-          style: TextStyle(
-            fontSize: 18,
-            color: isActive ? Colors.blue : Colors.grey,
-          ),
+    return InkWell(
+      onTap: onSelected,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            Icon(
+              isActive ? Icons.star : Icons.star_border,
+              color: Colors.orange,
+            ),
+          ],
         ),
-        SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            color: isActive ? Colors.black : Colors.grey,
-          ),
-        ),
-        if (isActive)
-          Icon(
-            Icons.star,
-            color: Colors.orange,
-          ),
-      ],
+      ),
     );
   }
 }
