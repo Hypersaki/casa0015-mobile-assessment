@@ -122,17 +122,33 @@ class ThresholdIndicator extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ThresholdLabel(
-          threshold: 'Poor',
-          value: 'Poor: ≥${poorMin} ppm',
-          isActive: starStatus['Poor'] ?? false,
-          onSelected: () => onStarTap('Poor'),
-        ),
-        ThresholdLabel(
-          threshold: 'Bad',
-          value: 'Bad: ≥${poorMax} ppm',
-          isActive: starStatus['Bad'] ?? false,
-          onSelected: () => onStarTap('Bad'),
+        DefaultTextStyle(
+          style: TextStyle(
+            fontSize: 16.0, // Uniform font size
+            color: Colors.black, // Uniform text color
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Good: ≥ ${goodMin} ppm'),
+              ),
+              SizedBox(height: 10.0),  // Consistent spacing
+              ThresholdLabel(
+                threshold: 'Poor',
+                value: 'Poor: ≥${poorMin} ppm',
+                isActive: starStatus['Poor'] ?? false,
+                onSelected: () => onStarTap('Poor'),
+              ),
+              SizedBox(height: 8.0),  // Consistent spacing
+              ThresholdLabel(
+                threshold: 'Bad',
+                value: 'Bad: ≥${poorMax} ppm',
+                isActive: starStatus['Bad'] ?? false,
+                onSelected: () => onStarTap('Bad'),
+              ),
+            ],
+          ),
         ),
       ],
     );

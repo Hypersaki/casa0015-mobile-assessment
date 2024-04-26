@@ -15,7 +15,7 @@ class DataViewer extends StatefulWidget {
 class _DataViewerState extends State<DataViewer> {
   @override
   Widget build(BuildContext context) {
-    SensorData sensorData = Provider.of<SensorData>(context);
+    //SensorData sensorData = Provider.of<SensorData>(context);
 
     return Scaffold(
       appBar: AppBar(

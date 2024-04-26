@@ -124,24 +124,63 @@ class ThresholdIndicator extends StatelessWidget {
     String threshold = value >= goodMin && value <= goodMax
         ? 'Good'
         : (value >= poorMin && value <= poorMax ? 'Poor' : 'Bad');
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ThresholdLabel(
-          threshold: 'Poor',
-          value: 'Poor: ${poorMin}%-${goodMin}% OR ${goodMax}-%${poorMax}%',
-          isActive: starStatus['Poor'] ?? false,
-          onSelected: () => onStarTap('Poor'),
-        ),
-        ThresholdLabel(
-          threshold: 'Bad',
-          value: 'Bad: <${poorMin}% OR >${poorMax}%',
-          isActive: starStatus['Bad'] ?? false,
-          onSelected: () => onStarTap('Bad'),
+        DefaultTextStyle(
+          style: TextStyle(
+            fontSize: 16.0,
+            color: Colors.black,
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Good: ${goodMin}% - ${goodMax}%'),
+              ),
+              SizedBox(height: 10.0),
+              ThresholdLabel(
+                threshold: 'Poor',
+                value: 'Poor: ${poorMin}% - ${goodMin}% OR ${goodMax}% - ${poorMax}%',
+                isActive: starStatus['Poor'] ?? false,
+                onSelected: () => onStarTap('Poor'),
+              ),
+              SizedBox(height: 8.0),
+              ThresholdLabel(
+                threshold: 'Bad',
+                value: 'Bad: <${poorMin}% OR >${poorMax}%',
+                isActive: starStatus['Bad'] ?? false,
+                onSelected: () => onStarTap('Bad'),
+              ),
+            ],
+          ),
         ),
       ],
     );
+
+    // return Column(
+    //   mainAxisAlignment: MainAxisAlignment.center,
+    //   children: [
+    //     Padding(
+    //         padding: EdgeInsets.all(8.0),
+    //         child: Text(
+    //           'Good: ${goodMin}% - ${goodMax}%',
+    //         )
+    //     ),
+    //     ThresholdLabel(
+    //       threshold: 'Poor',
+    //       value: 'Poor: ${poorMin}%-${goodMin}% OR ${goodMax}-%${poorMax}%',
+    //       isActive: starStatus['Poor'] ?? false,
+    //       onSelected: () => onStarTap('Poor'),
+    //     ),
+    //     ThresholdLabel(
+    //       threshold: 'Bad',
+    //       value: 'Bad: <${poorMin}% OR >${poorMax}%',
+    //       isActive: starStatus['Bad'] ?? false,
+    //       onSelected: () => onStarTap('Bad'),
+    //     ),
+    //   ],
+    // );
   }
 }
 

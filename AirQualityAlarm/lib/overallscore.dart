@@ -133,14 +133,12 @@ class StatusBar extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(8),
         child: Text(label,
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold
-          )
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold
+            )
         ),
       ),
     );
   }
 }
-
-
