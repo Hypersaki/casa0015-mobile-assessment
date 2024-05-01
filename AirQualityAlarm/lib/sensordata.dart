@@ -18,26 +18,26 @@ class SensorData with ChangeNotifier {
   double get smoke => _smoke;
   bool get isConnected => _isConnected;
 
-  final double HrGoodMin = 40.0;
-  final double HrGoodMax = 60.0; // Hr
-  final double HrPoorMin = 20.0;
-  final double HrPoorMax = 80.0; // Hr
-  final double TempGoodMin = 18.0;
-  final double TempGoodMax = 27.0; // Temp
-  final double TempPoorMin = 9.0;
-  final double TempPoorMax = 34.0; // Temp
-  final double VOCsGoodMin = 0.0;
-  final double VOCsGoodMax = 100.0; // VOCs
-  final double VOCsPoorMin = 100.0;
-  final double VOCsPoorMax = 200.0; // VOCs
-  final double SMKGoodMin = 0.0;
-  final double SMKGoodMax = 110.0; // Smoke
-  final double SMKPoorMin = 110.0;
-  final double SMKPoorMax = 230.0; // Smoke
-  final double COGoodMin = 0.0;
-  final double COGoodMax = 80.0; // CO
-  final double COPoorMin = 80.0;
-  final double COPoorMax = 210.0; // CO
+  final double HrGoodMin = 35.0;    //hr 1l
+  final double HrGoodMax = 65.0;    //hr 1h
+  final double HrPoorMin = 20.0;    //hr 2l
+  final double HrPoorMax = 80.0;    //hr 2h
+  final double TempGoodMin = 18.0;  //temp 1l
+  final double TempGoodMax = 27.0;  //temp 1h
+  final double TempPoorMin = 9.0;   //temp 2l
+  final double TempPoorMax = 34.0;  //temp 2h
+  final double VOCsGoodMin = 0.0;   //vocs 1
+  final double VOCsGoodMax = 1.0;   //vocs 2
+  final double VOCsPoorMin = 1.0;
+  final double VOCsPoorMax = 3.0;   //vocs 3
+  final double SMKGoodMin = 0.0;    //smoke 1
+  final double SMKGoodMax = 80.0;   //smoke 2
+  final double SMKPoorMin = 80.0;
+  final double SMKPoorMax = 150.0;  //smoke 3
+  final double COGoodMin = 0.0;     //co 1
+  final double COGoodMax = 9.0;     //co 2
+  final double COPoorMin = 9.0;
+  final double COPoorMax = 50.0;    //co 3
 
   String get HrStatus {
     if (_humidity >= HrGoodMin && _humidity <= HrGoodMax) {
@@ -372,8 +372,6 @@ class SensorData with ChangeNotifier {
     _co = newCo;
     _smoke = newSmoke;
     notifyListeners();
-    // checkAndTriggerStarredStatusNotifications();
-    // checkAndTriggerOverallScoreNotification();
     checkPoorOrBadCountThresholdStatusNotifications();
     checkMonitorStarredStatusNotifications();
     checkAndTriggerOverallScoreNotification();

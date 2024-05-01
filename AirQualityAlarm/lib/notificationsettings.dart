@@ -46,6 +46,8 @@ class _NotificationSettingsState
                     decoration: InputDecoration(suffixText: 'count'),
                   ),
                 ),
+                Divider(),
+                SizedBox(height: 40.0),
                 Consumer<SensorData>(
                   builder: (context, provider, child) {
                     return SwitchListTile(
@@ -57,6 +59,8 @@ class _NotificationSettingsState
                     );
                   },
                 ),
+                Divider(),
+                SizedBox(height: 40.0),
                 SwitchListTile(
                   title: Text('Overall Score Threshold'),
                   value: sensorData.enableNotifications3,
@@ -69,6 +73,7 @@ class _NotificationSettingsState
                     decoration: InputDecoration(suffixText: 'points'),
                   ),
                 ),
+                Divider(),
               ],
             ),
           );
