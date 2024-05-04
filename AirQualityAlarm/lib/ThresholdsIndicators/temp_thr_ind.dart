@@ -53,7 +53,7 @@ class _TemperatureDetailScreenState extends State<TemperatureDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Placeholder(fallbackHeight: 200.0), // TODO: change to a picture
+            Image.asset('assets/images/env_img/png/temperature.png', height: 200.0),
             SizedBox(height: 20),
             Center(
               child: Consumer<SensorData>(

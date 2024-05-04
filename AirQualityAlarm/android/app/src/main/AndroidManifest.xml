@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
-        android:label="airqualityalarm"
+        android:label="Air Alarm"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

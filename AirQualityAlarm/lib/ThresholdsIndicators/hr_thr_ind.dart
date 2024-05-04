@@ -57,7 +57,7 @@ class _HumidityDetailScreenState extends State<HumidityDetailScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Placeholder(fallbackHeight: 200.0), // TODO: change to a picture
+            Image.asset('assets/images/env_img/png/humidity.png', height: 200.0),
             SizedBox(height: 20),
             Center(
               child: Consumer<SensorData>(
@@ -157,30 +157,6 @@ class ThresholdIndicator extends StatelessWidget {
         ),
       ],
     );
-
-    // return Column(
-    //   mainAxisAlignment: MainAxisAlignment.center,
-    //   children: [
-    //     Padding(
-    //         padding: EdgeInsets.all(8.0),
-    //         child: Text(
-    //           'Good: ${goodMin}% - ${goodMax}%',
-    //         )
-    //     ),
-    //     ThresholdLabel(
-    //       threshold: 'Poor',
-    //       value: 'Poor: ${poorMin}%-${goodMin}% OR ${goodMax}-%${poorMax}%',
-    //       isActive: starStatus['Poor'] ?? false,
-    //       onSelected: () => onStarTap('Poor'),
-    //     ),
-    //     ThresholdLabel(
-    //       threshold: 'Bad',
-    //       value: 'Bad: <${poorMin}% OR >${poorMax}%',
-    //       isActive: starStatus['Bad'] ?? false,
-    //       onSelected: () => onStarTap('Bad'),
-    //     ),
-    //   ],
-    // );
   }
 }
 

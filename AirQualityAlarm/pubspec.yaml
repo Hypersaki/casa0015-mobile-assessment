@@ -59,7 +59,12 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
+  assets:
+    - assets\images\env_img\png\co.png
+    - assets\images\env_img\png\humidity.png
+    - assets\images\env_img\png\smoke.png
+    - assets\images\env_img\png\temperature.png
+    - assets\images\env_img\png\vocs.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
