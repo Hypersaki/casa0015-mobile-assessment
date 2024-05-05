@@ -258,7 +258,9 @@ class SensorData with ChangeNotifier {
       try {
         await prefs.setDouble('overallScoreThreshold',
             double.parse(overallScoreThresholdController.text));
-      } catch (e) {}
+      } catch (e) {
+        print(e);
+      }
     });
   }
 
@@ -355,7 +357,7 @@ class SensorData with ChangeNotifier {
   void checkAndTriggerOverallScoreNotification() async {
     final prefs = await SharedPreferences.getInstance();
     double notificationThreshold =
-        prefs.getDouble('notificationThreshold') ?? 80.0;
+        prefs.getDouble('overallScoreThreshold') ?? 80.0;
     double overallScore = OverallScoreCalculation();
     if (enableNotifications3 && overallScore < notificationThreshold) {
       NotificationService().showNotification("Error Notification",
