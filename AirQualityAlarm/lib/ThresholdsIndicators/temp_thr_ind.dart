@@ -138,7 +138,7 @@ class ThresholdIndicator extends StatelessWidget {
               SizedBox(height: 10.0),  // Consistent spacing
               ThresholdLabel(
                 threshold: 'Poor',
-                value: 'Poor: ≥${poorMin}°C',
+                value: 'Poor: ≤${poorMin}°C',
                 isActive: starStatus['Poor'] ?? false,
                 onSelected: () => onStarTap('Poor'),
               ),

@@ -359,7 +359,7 @@ class SensorData with ChangeNotifier {
     double overallScore = OverallScoreCalculation();
     if (enableNotifications3 && overallScore < notificationThreshold) {
       NotificationService().showNotification("Error Notification",
-          "overall score is lower than $notificationThreshold",
+          "Overall Score is lower than $notificationThreshold",
           id: 3, channelId: '3', channelName: 'TriggerOverall');
     }
   }

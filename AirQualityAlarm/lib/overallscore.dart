@@ -56,7 +56,7 @@ class _OverallScoreScreenState extends State<OverallScoreScreen> {
 
   double getCircleSize(BuildContext context, double score) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return screenWidth * (0.8 + (score / 100) * (0.20 - 0.125));
+    return screenWidth * (0.5 + (score / 100) * (0.35));
   }
 
   @override

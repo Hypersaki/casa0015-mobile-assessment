@@ -67,13 +67,6 @@ class MyApp extends StatelessWidget {
           },
         );
       },
-      // child: MaterialApp(
-      //   title: 'Air Quality Alarm',
-      //   theme: ThemeData(
-      //     primarySwatch: Colors.blue,
-      //   ),
-      //   home: const BtmNavigationBar(),
-      // ),
     );
   }
 }

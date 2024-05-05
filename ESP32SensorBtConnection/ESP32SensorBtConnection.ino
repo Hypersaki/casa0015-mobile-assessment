@@ -34,7 +34,7 @@ void loop() {
   float ppm = gasSensor.getPPM();       // total ppm, considering as smoke
   float ppmVOCs = (1 / ratio) * 0.28;
   float ppmCO = (1 / ratio) * 3;
-  float ppmSmoke = ppm;
+  float ppmSmoke = (1 / ratio)* 30;
 
 
   if (SerialBT.hasClient()) {
