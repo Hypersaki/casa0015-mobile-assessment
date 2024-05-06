@@ -57,7 +57,7 @@ This air sensor device is mainly made up of the following components:
 
 ## Installation
 
-Installation package can be found here: [Release](https://github.com/Hypersaki/casa0015-mobile-assessment/releases)
+Installation package can be found here: [APK FILE](https://github.com/Hypersaki/casa0015-mobile-assessment/releases/download/v1.2.43/AirAlarm.apk)
 
 ## Author Contact
 Zhouyu Jiang
