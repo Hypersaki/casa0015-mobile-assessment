@@ -57,7 +57,7 @@ This air sensor device is mainly made up of the following components:
 
 ## Installation
 
-Installation package: .apk
+Installation package can be found here: [Release](https://github.com/Hypersaki/casa0015-mobile-assessment/releases)
 
 ## Author Contact
 Zhouyu Jiang
