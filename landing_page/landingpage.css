@@ -59,7 +59,7 @@ a {
 
 .github-icon .iconify {
     font-size: 100px; /* Make it the same size as logo */
-    color: #1D2731; /* Set color */
+    color: #FFFFFF; /* Set color */
 }
 
 section {
@@ -208,7 +208,7 @@ section#features {
 }
 
 .feature-description {
-    color: white;
+    color: #FFFFFF;
     margin: 5px 0;
     font-size: 1.75em;
 }
@@ -220,10 +220,16 @@ section#features {
     }
 }
 
-
+#demo h2 {
+    font-size: 5em;
+    text-align: center; 
+    text-shadow: #FFFFFF 4px 4px;
+    color: #1D2731; 
+}
 #demo video {
-    width: 80%;
-    height: auto;
+    display: block; 
+    margin: 0 auto; 
+    max-width: 20%; 
 }
 
 .footer-section h4 {
