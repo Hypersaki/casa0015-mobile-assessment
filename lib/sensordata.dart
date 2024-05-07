@@ -237,10 +237,10 @@ class SensorData with ChangeNotifier {
         (prefs.getInt('poorOrBadCountThreshold') ?? 1).toString();
     overallScoreThresholdController.text =
         (prefs.getDouble('overallScoreThreshold') ?? 80.0).toString();
-    enableNotifications = prefs.getBool('enableNotifications') ?? true;
-    enableNotifications1 = prefs.getBool('enableNotifications1') ?? true;
-    enableNotifications2 = prefs.getBool('enableNotifications2') ?? true;
-    enableNotifications3 = prefs.getBool('enableNotifications3') ?? true;
+    enableNotifications = prefs.getBool('enableNotifications') ?? false;
+    enableNotifications1 = prefs.getBool('enableNotifications1') ?? false;
+    enableNotifications2 = prefs.getBool('enableNotifications2') ?? false;
+    enableNotifications3 = prefs.getBool('enableNotifications3') ?? false;
     starredStatuses.forEach((key, value) {
       starredStatuses[key] = prefs.getBool(key) ?? false;
     });
@@ -334,14 +334,14 @@ class SensorData with ChangeNotifier {
       print(starredStatuses);
       if ((starredStatuses['HrPoor']! && HrStatus == 'Poor') ||
           (starredStatuses['HrBad']! && HrStatus == 'Bad') ||
-          (starredStatuses['TempPoor']! && HrStatus == 'Poor') ||
-          (starredStatuses['TempBad']! && HrStatus == 'Bad') ||
-          (starredStatuses['VOCsPoor']! && HrStatus == 'Poor') ||
-          (starredStatuses['VOCsBad']! && HrStatus == 'Bad') ||
-          (starredStatuses['COPoor']! && HrStatus == 'Poor') ||
-          (starredStatuses['COBad']! && HrStatus == 'Bad') ||
-          (starredStatuses['SMKPoor']! && HrStatus == 'Poor') ||
-          (starredStatuses['SMKBad']! && HrStatus == 'Bad')) {
+          (starredStatuses['TempPoor']! && TempStatus == 'Poor') ||
+          (starredStatuses['TempBad']! && TempStatus == 'Bad') ||
+          (starredStatuses['VOCsPoor']! && VOCsStatus == 'Poor') ||
+          (starredStatuses['VOCsBad']! && VOCsStatus == 'Bad') ||
+          (starredStatuses['COPoor']! && COStatus == 'Poor') ||
+          (starredStatuses['COBad']! && COStatus == 'Bad') ||
+          (starredStatuses['SMKPoor']! && SMKStatus == 'Poor') ||
+          (starredStatuses['SMKBad']! && SMKStatus == 'Bad')) {
         try {
           NotificationService().showNotification(
               "Error Notification", "starred status detected",
