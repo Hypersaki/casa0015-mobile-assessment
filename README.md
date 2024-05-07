@@ -53,7 +53,7 @@ This air sensor device is mainly made up of the following components:
 * MQ135 Hazardous Gas Sensor
 * DHT22 Temperature and Humidity Sensor
 
-![Sensor Device](https://github.com/Hypersaki/casa0015-mobile-assessment/raw/main/DemoScreenshots/sensor_device.jpg)
+![Sensor Device](https://github.com/Hypersaki/casa0015-mobile-assessment/blob/main/landing_page/mobility.jpg)
 
 ## Installation
 
