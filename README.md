@@ -1,7 +1,7 @@
 # Air Alarm
 
 ## About
-This is an android based application that connects to a companion sensor device via Bluetooth to provide real-time, high-frequency monitoring of air quality as well as alarms for indicators that fall below safety or health standards. Users can decide to be alarmed in different ways. You can find the Landing Page ![here](https://github.com/Hypersaki/casa0015-mobile-assessment/blob/main/AirAlarmLandingPage/landingpage.html).
+This is an android based application that connects to a companion sensor device via Bluetooth to provide real-time, high-frequency monitoring of air quality as well as alarms for indicators that fall below safety or health standards. Users can decide to be alarmed in different ways. You can find the Landing Page [here](https://github.com/Hypersaki/casa0015-mobile-assessment/blob/main/AirAlarmLandingPage/landingpage.html).
 
 ## Showcase
 
@@ -53,7 +53,7 @@ This air sensor device is mainly made up of the following components:
 * MQ135 Hazardous Gas Sensor
 * DHT22 Temperature and Humidity Sensor
 
-![Sensor Device](https://github.com/Hypersaki/casa0015-mobile-assessment/blob/main/landing_page/mobility.jpg)
+![Sensor Device](https://github.com/Hypersaki/casa0015-mobile-assessment/blob/main/AirAlarmLandingPage/mobility.jpg)
 
 ## Installation
 
